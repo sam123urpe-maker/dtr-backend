@@ -92,6 +92,52 @@ app.post('/api/upload', upload.single('imagen'), async (req, res) => {
 });
 
 // ============================================================
+// ENDPOINT: SUBIR IMAGEN BASE64 A CLOUDINARY
+// ============================================================
+app.post('/api/imagen/subir', async (req, res) => {
+  try {
+    const { base64, informeId, seccion, descripcion } = req.body;
+
+    if (!base64) {
+      return res.status(400).json({ ok: false, error: 'No se recibió imagen en base64' });
+    }
+
+    // Convertir base64 a buffer
+    const buffer = Buffer.from(base64.split(',')[1] || base64, 'base64');
+
+    const resultado = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'dtr-informes',
+          public_id: `${informeId}-${seccion}-${Date.now()}`,
+          resource_type: 'image',
+          transformation: [{ width: 1200, crop: 'limit' }, { quality: 'auto' }]
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    });
+
+    res.json({
+      ok: true,
+      url: resultado.secure_url,
+      publicId: resultado.public_id,
+      width: resultado.width,
+      height: resultado.height,
+      orientacion: resultado.width > resultado.height ? 'horizontal' : 'vertical',
+      mensaje: 'Imagen subida correctamente a Cloudinary'
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: 'Error al subir la imagen: ' + err.message });
+  }
+});
+
+// ============================================================
 // ENDPOINT: GUARDAR INFORME
 // ============================================================
 app.post('/api/informe/guardar', (req, res) => {
@@ -118,6 +164,8 @@ app.post('/api/informe/guardar', (req, res) => {
     const filePath = path.join(DATA_DIR, `${id}.json`);
     fs.writeFileSync(filePath, JSON.stringify(payload, null, 2));
 
+    console.log('✅ Informe guardado:', id);
+
     res.json({
       ok: true,
       id: id,
@@ -127,12 +175,13 @@ app.post('/api/informe/guardar', (req, res) => {
     });
 
   } catch (err) {
+    console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
 });
 
 // ============================================================
-// ENDPOINT: OBTENER INFORME
+// ENDPOINT: OBTENER INFORME (PARA n8n)
 // ============================================================
 app.get('/api/informe/:id', (req, res) => {
   try {
@@ -150,20 +199,78 @@ app.get('/api/informe/:id', (req, res) => {
       return res.status(410).json({ ok: false, error: 'El código ha expirado' });
     }
 
-    res.json({ ok: true, datos });
+    // ✅ CAMBIO AQUÍ: Devolver en formato que n8n espera
+    res.json({ 
+      ok: true, 
+      informe: datos, 
+      informeId: datos.informe.id 
+    });
 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// ============================================================
+// ENDPOINT: LISTAR INFORMES (opcional, para admin)
+// ============================================================
+app.get('/api/informes', (req, res) => {
+  try {
+    const archivos = fs.readdirSync(DATA_DIR);
+    const informes = archivos.map(archivo => {
+      const datos = JSON.parse(fs.readFileSync(path.join(DATA_DIR, archivo), 'utf8'));
+      return {
+        id: datos.meta.id,
+        informeId: datos.informe.id,
+        cliente: datos.cliente.nombre,
+        tipo: datos.informe.tipo,
+        fecha: datos.informe.fecha,
+        tecnico: datos.informe.tecnico,
+        creadoEn: datos.meta.creadoEn,
+        expiraEn: datos.meta.expiraEn,
+        estado: datos.meta.estado
+      };
+    });
+
+    res.json({ ok: true, total: informes.length, informes });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
 
-// Health Check
+// ============================================================
+// ENDPOINT: ELIMINAR INFORME (opcional, para admin)
+// ============================================================
+app.delete('/api/informe/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const filePath = path.join(DATA_DIR, `${id}.json`);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ ok: false, error: 'Informe no encontrado' });
+    }
+
+    fs.unlinkSync(filePath);
+
+    res.json({ ok: true, mensaje: 'Informe eliminado correctamente' });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// ============================================================
+// HEALTH CHECK
+// ============================================================
 app.get('/health', (req, res) => {
   res.json({ ok: true, mensaje: 'Backend funcionando correctamente' });
 });
 
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
+// ============================================================
+// INICIAR SERVIDOR
+// ============================================================
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Backend corriendo en puerto ${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
 });
