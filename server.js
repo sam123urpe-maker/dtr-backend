@@ -37,7 +37,7 @@ const upload = multer({
 });
 
 // Carpeta para guardar JSONs
-const DATA_DIR = '/tmp/data';
+const DATA_DIR = './data';  // Carpeta en la raíz del proyecto
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
