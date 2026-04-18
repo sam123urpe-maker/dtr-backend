@@ -26,12 +26,21 @@ cloudinary.config({
 // ============================================================
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:password@cluster0.mongodb.net/dtr-informes?retryWrites=true&w=majority';
 
-mongoose.connect(MONGO_URI).then(() => {
-  console.log('✅ Conectado a MongoDB');
-}).catch(err => {
-  console.error('❌ Error conectando a MongoDB:', err);
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGO_URI, {
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 30000
+    });
+    console.log('✅ Conectado a MongoDB');
+  } catch (err) {
+    console.error('❌ Error conectando a MongoDB:', err);
+    setTimeout(connectDB, 5000); // Reintentar cada 5 segundos
+  }
+};
 
+connectDB();
 // ============================================================
 // ESQUEMA Y MODELO DE INFORME
 // ============================================================
