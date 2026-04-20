@@ -36,11 +36,12 @@ const connectDB = async () => {
     console.log('✅ Conectado a MongoDB');
   } catch (err) {
     console.error('❌ Error conectando a MongoDB:', err);
-    setTimeout(connectDB, 5000); // Reintentar cada 5 segundos
+    setTimeout(connectDB, 5000);
   }
 };
 
 connectDB();
+
 // ============================================================
 // ESQUEMA Y MODELO DE INFORME
 // ============================================================
@@ -56,12 +57,12 @@ const informeSchema = new mongoose.Schema({
 const Informe = mongoose.model('Informe', informeSchema);
 
 // ============================================================
-// CONFIGURACIÓN MULTER (para recibir imágenes)
+// CONFIGURACIÓN MULTER
 // ============================================================
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // máximo 10MB
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
@@ -84,7 +85,62 @@ function generarId() {
 }
 
 // ============================================================
-// ENDPOINT: SUBIR IMAGEN A CLOUDINARY
+// BASE DE DATOS DE EQUIPOS
+// ============================================================
+const EQUIPOS_DB = [
+  { "codigo": "TL-001", "tipo": "LED", "marca": "MAGNUM", "año": "2023", "modelo": "MLT4060J", "serie": "JL0123001", "color": "NARANJA", "motor": "KUBOTA D1105", "chasis": "6S8478" },
+  { "codigo": "TL-002", "tipo": "LUMINARIA", "marca": "WACKER NEUSON", "año": "2013", "modelo": "LTN6", "serie": "5944654", "color": "", "motor": "KUBOTA", "chasis": "" },
+  { "codigo": "TL-004", "tipo": "LED", "marca": "ATLAS COPCO", "año": "2013", "modelo": "QLT M10", "serie": "8972822850", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1DG1881" },
+  { "codigo": "TL-005", "tipo": "LED", "marca": "MAGNUM", "año": "2019", "modelo": "MLT4060 M", "serie": "1106727", "color": "AMARILLO", "motor": "MITSUBISHI L3E", "chasis": "138061C5" },
+  { "codigo": "TL-006", "tipo": "TEREX", "marca": "TEREX", "año": "2014", "modelo": "RL-4000", "serie": "RL-411-3002", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "CG1689" },
+  { "codigo": "TL-007", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-411-381", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AR0524" },
+  { "codigo": "TL-008", "tipo": "LED", "marca": "GENERAC", "año": "", "modelo": "", "serie": "", "color": "", "motor": "", "chasis": "" },
+  { "codigo": "TL-009", "tipo": "LED", "marca": "TEREX", "año": "2019", "modelo": "RL-4000", "serie": "RL-4016-760", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "E9885" },
+  { "codigo": "TL-010", "tipo": "MAGNUM", "marca": "MAGNUM", "año": "2019", "modelo": "MLT4060 M", "serie": "175180D", "color": "AMARILLO", "motor": "MITSUBISHI L3E", "chasis": "163554J6" },
+  { "codigo": "TL-011", "tipo": "LED", "marca": "GENERAC", "año": "2022", "modelo": "VVT8", "serie": "1403120", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "BM3293" },
+  { "codigo": "TL-012", "tipo": "HALOGENURO", "marca": "WACKER NEUSON", "año": "", "modelo": "", "serie": "", "color": "", "motor": "", "chasis": "" },
+  { "codigo": "TL-015", "tipo": "TEREX", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-416-4310", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1CX2670" },
+  { "codigo": "TL-016", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL412-4478", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AA4308" },
+  { "codigo": "TL-023", "tipo": "LED", "marca": "KUBOTA", "año": "2023", "modelo": "TLT4WL", "serie": "TPS01FJ191135", "color": "AMARILLO", "motor": "KUBOTA Z482", "chasis": "4KN5788" },
+  { "codigo": "TL-024", "tipo": "LED", "marca": "KUBOTA", "año": "2023", "modelo": "TLT4WL", "serie": "TPS01FJ171137", "color": "AMARILLO", "motor": "KUBOTA Z482", "chasis": "4KN5791" },
+  { "codigo": "TL-025", "tipo": "LUMINARIA", "marca": "ATLAS COPCO", "año": "2014", "modelo": "QLMT", "serie": "", "color": "", "motor": "KUBOTA D1105", "chasis": "" },
+  { "codigo": "TL-026", "tipo": "LUMINARIA", "marca": "WANCO", "año": "2014", "modelo": "QLMT", "serie": "1001154", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "8W3074" },
+  { "codigo": "TL-027", "tipo": "LED", "marca": "WANCO", "año": "2019", "modelo": "QLMT", "serie": "AKBXL015BCC", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AQ7292" },
+  { "codigo": "TL-028", "tipo": "LED", "marca": "WANCO", "año": "2020", "modelo": "WLTC4", "serie": "03586", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AL1654" },
+  { "codigo": "TL-030", "tipo": "LED", "marca": "WACKER NEUSON", "año": "2019", "modelo": "LTN6", "serie": "20078957", "color": "AMARILLO", "motor": "KOHLER KDW1003GE", "chasis": "9126226" },
+  { "codigo": "TL-035", "tipo": "LUMINARIA", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-411-4650", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1CU8598" },
+  { "codigo": "TL-036", "tipo": "HALOGENURO", "marca": "ATLAS COPCO", "año": "2013", "modelo": "QLMT M10", "serie": "8972822850", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1DG7264" },
+  { "codigo": "TL-037", "tipo": "LED", "marca": "KUBOTA", "año": "2023", "modelo": "TLT4WL", "serie": "TPS01FJ191134", "color": "AMARILLO", "motor": "KUBOTA Z482", "chasis": "4KN5782" },
+  { "codigo": "TL-038", "tipo": "TEREX", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL413-6052", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1CU6492" },
+  { "codigo": "TL-039", "tipo": "LED", "marca": "KUBOTA", "año": "2022", "modelo": "TLT4WL", "serie": "TPS01FJ191133", "color": "AMARILLO", "motor": "KUBOTA Z428", "chasis": "4KN5785" },
+  { "codigo": "TL-040", "tipo": "LUMINARIA", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-416-6095", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1CU4981" },
+  { "codigo": "TL-041", "tipo": "LUMINARIA", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-411-3253", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "BG2183" },
+  { "codigo": "TL-042", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL411-3303", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "BG1471" },
+  { "codigo": "TL-3025", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "MLT4060 M", "serie": "1006060", "color": "BLANCO", "motor": "MITSUBISHI L3E", "chasis": "212693-FO" },
+  { "codigo": "TL-3026", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
+  { "codigo": "TL-3027", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
+  { "codigo": "TL-3028", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
+  { "codigo": "TL-3029", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
+  { "codigo": "CAP-01", "tipo": "COMPRESORA", "marca": "CAMPBELL HAUSFELD", "año": "2022", "modelo": "EXTREME DUTY HS538000AJ", "serie": "", "color": "AMARILLO", "motor": "SIEMENS TRIFÁSICO", "chasis": "GR2206902" }
+];
+
+// ============================================================
+// ENDPOINT: OBTENER EQUIPOS
+// ============================================================
+app.get('/api/equipos', (req, res) => {
+  try {
+    res.json({
+      ok: true,
+      total: EQUIPOS_DB.length,
+      equipos: EQUIPOS_DB
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// ============================================================
+// ENDPOINT: SUBIR IMAGEN A CLOUDINARY (FormData)
 // ============================================================
 app.post('/api/upload', upload.single('imagen'), async (req, res) => {
   try {
@@ -131,7 +187,6 @@ app.post('/api/imagen/subir', async (req, res) => {
       return res.status(400).json({ ok: false, error: 'No se recibió imagen en base64' });
     }
 
-    // Convertir base64 a buffer
     const buffer = Buffer.from(base64.split(',')[1] || base64, 'base64');
 
     const resultado = await new Promise((resolve, reject) => {
@@ -167,7 +222,7 @@ app.post('/api/imagen/subir', async (req, res) => {
 });
 
 // ============================================================
-// ENDPOINT: GUARDAR INFORME (CON MONGODB)
+// ENDPOINT: GUARDAR INFORME (MONGODB)
 // ============================================================
 app.post('/api/informe/guardar', async (req, res) => {
   try {
@@ -190,7 +245,6 @@ app.post('/api/informe/guardar', async (req, res) => {
       }
     };
 
-    // ✅ GUARDAR EN MONGODB
     const nuevoInforme = new Informe({
       id: id,
       informeId: payload.informe.id,
@@ -201,7 +255,6 @@ app.post('/api/informe/guardar', async (req, res) => {
     });
 
     await nuevoInforme.save();
-
     console.log('✅ Informe guardado en MongoDB:', id);
 
     res.json({
@@ -219,13 +272,11 @@ app.post('/api/informe/guardar', async (req, res) => {
 });
 
 // ============================================================
-// ENDPOINT: OBTENER INFORME (CON MONGODB)
+// ENDPOINT: OBTENER INFORME (MONGODB)
 // ============================================================
 app.get('/api/informe/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
-    // ✅ BUSCAR EN MONGODB
     const informe = await Informe.findOne({ id: id });
 
     if (!informe) {
@@ -233,15 +284,14 @@ app.get('/api/informe/:id', async (req, res) => {
     }
 
     if (new Date() > new Date(informe.expiraEn)) {
-      // Eliminar si expiró
       await Informe.deleteOne({ id: id });
       return res.status(410).json({ ok: false, error: 'El código ha expirado' });
     }
 
-    res.json({ 
-      ok: true, 
-      informe: informe.datos, 
-      informeId: informe.informeId 
+    res.json({
+      ok: true,
+      informe: informe.datos,
+      informeId: informe.informeId
     });
 
   } catch (err) {
@@ -251,12 +301,11 @@ app.get('/api/informe/:id', async (req, res) => {
 });
 
 // ============================================================
-// ENDPOINT: LISTAR INFORMES (OPCIONAL, PARA ADMIN)
+// ENDPOINT: LISTAR INFORMES (ADMIN)
 // ============================================================
 app.get('/api/informes', async (req, res) => {
   try {
     const informes = await Informe.find({});
-    
     const resultado = informes.map(inf => ({
       id: inf.id,
       informeId: inf.informeId,
@@ -268,7 +317,6 @@ app.get('/api/informes', async (req, res) => {
       expiraEn: inf.expiraEn,
       estado: inf.estado
     }));
-
     res.json({ ok: true, total: resultado.length, informes: resultado });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -276,18 +324,15 @@ app.get('/api/informes', async (req, res) => {
 });
 
 // ============================================================
-// ENDPOINT: ELIMINAR INFORME (OPCIONAL, PARA ADMIN)
+// ENDPOINT: ELIMINAR INFORME (ADMIN)
 // ============================================================
 app.delete('/api/informe/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
     const resultado = await Informe.deleteOne({ id: id });
-
     if (resultado.deletedCount === 0) {
       return res.status(404).json({ ok: false, error: 'Informe no encontrado' });
     }
-
     res.json({ ok: true, mensaje: 'Informe eliminado correctamente' });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
