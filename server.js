@@ -76,41 +76,42 @@ const upload = multer({
 // BASE DE DATOS DE EQUIPOS (ORDENADA POR CÓDIGO)
 // ============================================================
 const EQUIPOS_DB = [
-  { "codigo": "CAP-01", "tipo": "COMPRESORA", "marca": "CAMPBELL HAUSFELD", "año": "2022", "modelo": "EXTREME DUTY HS538000AJ", "serie": "HS538000AJ", "color": "AMARILLO", "motor": "SIEMENS TRIFÁSICO", "chasis": "GR2206902" },
-  { "codigo": "JL-001", "tipo": "LED", "marca": "MAGNUM", "año": "2023", "modelo": "MLT4060J", "serie": "JL0123001", "color": "NARANJA", "motor": "KUBOTA D1105", "chasis": "6S8478" },
-  { "codigo": "TL-001", "tipo": "LUMINARIA", "marca": "WACKER NEUSON", "año": "2013", "modelo": "LTN6", "serie": "5944654", "color": "", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-002", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-413-6071", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AA4305" },
-  { "codigo": "TL-003", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "2018", "modelo": "MLT 3060 M", "serie": "1101371", "color": "AMARILLO", "motor": "MITSUBISHI L3E", "chasis": "150131A6" },
-  { "codigo": "TL-004", "tipo": "LED", "marca": "ATLAS COPCO", "año": "2013", "modelo": "QLT M10", "serie": "8972822850", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1DG1881" },
-  { "codigo": "TL-005", "tipo": "LED", "marca": "MAGNUM", "año": "2019", "modelo": "MLT4060 M", "serie": "1106727", "color": "AMARILLO", "motor": "MITSUBISHI L3E", "chasis": "138061C5" },
-  { "codigo": "TL-006", "tipo": "LED", "marca": "TEREX", "año": "2014", "modelo": "RL-4000", "serie": "RL-411-3002", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "CG1689" },
-  { "codigo": "TL-007", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-4000", "serie": "RL-411-381", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AR0524" },
-  { "codigo": "TL-008", "tipo": "LED", "marca": "GENERAC", "año": "2019", "modelo": "RL-4016-760", "serie": "E9885", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-010", "tipo": "LED", "marca": "MAGNUM", "año": "2019", "modelo": "MLT4060 M", "serie": "175180D", "color": "AMARILLO", "motor": "MITSUBISHI L3E", "chasis": "163554J6" },
-  { "codigo": "TL-011", "tipo": "LED", "marca": "GENERAC", "año": "2022", "modelo": "VVT8", "serie": "1403120", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "BM3293" },
-  { "codigo": "TL-012", "tipo": "HALOGENURO", "marca": "WACKER NEUSON", "año": "", "modelo": "", "serie": "", "color": "", "motor": "", "chasis": "" },
-  { "codigo": "TL-015", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-416-4310", "serie": "1CX2670", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-016", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL412-4478", "serie": "AA4308", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-023", "tipo": "LED", "marca": "KUBOTA", "año": "2023", "modelo": "TLT4WL", "serie": "TPS01FJ191135", "color": "AMARILLO", "motor": "KUBOTA Z482", "chasis": "4KN5788" },
-  { "codigo": "TL-024", "tipo": "LED", "marca": "KUBOTA", "año": "2023", "modelo": "TLT4WL", "serie": "TPS01FJ171137", "color": "AMARILLO", "motor": "KUBOTA Z482", "chasis": "4KN5791" },
-  { "codigo": "TL-025", "tipo": "LUMINARIA", "marca": "ATLAS COPCO", "año": "2014", "modelo": "QLMT", "serie": "1513D1412A", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-026", "tipo": "LUMINARIA", "marca": "WANCO", "año": "2014", "modelo": "QLMT", "serie": "1001154", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "8W3074" },
-  { "codigo": "TL-027", "tipo": "LED", "marca": "WANCO", "año": "2019", "modelo": "QLMT", "serie": "AKBXL015BCC", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AQ7292" },
-  { "codigo": "TL-028", "tipo": "LED", "marca": "WANCO", "año": "2020", "modelo": "WLTC4", "serie": "03586", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "AL1654" },
-  { "codigo": "TL-030", "tipo": "LED", "marca": "WACKER NEUSON", "año": "2019", "modelo": "LTN6", "serie": "20078957", "color": "AMARILLO", "motor": "KOHLER KDW1003GE", "chasis": "9126226" },
-  { "codigo": "TL-035", "tipo": "LUMINARIA", "marca": "TEREX", "año": "2018", "modelo": "RL-411-4650", "serie": "1CU8598", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-036", "tipo": "HALOGENURO", "marca": "ATLAS COPCO", "año": "2013", "modelo": "QLMT M10", "serie": "8972822850", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "1DG7264" },
-  { "codigo": "TL-037", "tipo": "LED", "marca": "KUBOTA", "año": "2023", "modelo": "TLT4WL", "serie": "TPS01FJ191134", "color": "AMARILLO", "motor": "KUBOTA Z482", "chasis": "4KN5782" },
-  { "codigo": "TL-038", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL-413-6052", "serie": "1CU6492", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-039", "tipo": "LED", "marca": "KUBOTA", "año": "2022", "modelo": "TLT4WL", "serie": "TPS01FJ191133", "color": "AMARILLO", "motor": "KUBOTA Z428", "chasis": "4KN5785" },
-  { "codigo": "TL-040", "tipo": "LUMINARIA", "marca": "TEREX", "año": "2018", "modelo": "RL-416-6095", "serie": "1CU4981", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-041", "tipo": "LUMINARIA", "marca": "TEREX", "año": "2018", "modelo": "RL-411-3253", "serie": "BG2183", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-042", "tipo": "LED", "marca": "TEREX", "año": "2018", "modelo": "RL411-3303", "serie": "BG1471", "color": "AMARILLO", "motor": "KUBOTA D1105", "chasis": "" },
-  { "codigo": "TL-3025", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "MLT4060 M", "serie": "1006060", "color": "BLANCO", "motor": "MITSUBISHI L3E", "chasis": "212693-FO" },
-  { "codigo": "TL-3026", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
-  { "codigo": "TL-3027", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
-  { "codigo": "TL-3028", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" },
-  { "codigo": "TL-3029", "tipo": "HALOGENURO", "marca": "MAGNUM", "año": "", "modelo": "", "serie": "", "color": "", "motor": "MITSUBISHI L3E", "chasis": "" }
+  { "codigo": "JL-001", "tipo": "LED",       "marca": "MAGNUM",      "año": "2023", "modelo": "MLT4060J",     "serie": "JL0123001", "color": "NARANJA",  "motor": "KUBOTA D1105",     "chasis": "658478" },
+  { "codigo": "TL-001", "tipo": "LUMINARIA", "marca": "WACKER NEUSON","año": "2013", "modelo": "LTN6",         "serie": "5944654",   "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "" },
+  { "codigo": "TL-002", "tipo": "LED",       "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL-413-6071","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "AA4305" },
+  { "codigo": "TL-004", "tipo": "LED",       "marca": "ATLAS COPCO",  "año": "2013", "modelo": "QLT M10",      "serie": "897282850", "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1DG1881" },
+  { "codigo": "TL-005", "tipo": "LED",       "marca": "MAGNUM",      "año": "2019", "modelo": "MLT4060 M",    "serie": "1106727",   "color": "AMARILLO", "motor": "MITSUBISHI L3E",   "chasis": "138061C5" },
+  { "codigo": "TL-006", "tipo": "LED",       "marca": "TEREX",       "año": "2014", "modelo": "RL-4000",      "serie": "RL-411-3002","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "CG1689" },
+  { "codigo": "TL-007", "tipo": "LED",       "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL-411-381", "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "AR0524" },
+  { "codigo": "TL-008", "tipo": "LED",       "marca": "GENERAC",     "año": "2019", "modelo": "RL-4016-760",  "serie": "E9885",     "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "" },
+  { "codigo": "TL-009", "tipo": "LED",       "marca": "TEREX",       "año": "2019", "modelo": "RL-4000",      "serie": "RL-4016-760","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "E9885" },
+  { "codigo": "TL-010", "tipo": "LED",       "marca": "MAGNUM",      "año": "2019", "modelo": "MLT4060 M",    "serie": "175180D",   "color": "AMARILLO", "motor": "MITSUBISHI L3E",   "chasis": "1635546" },
+  { "codigo": "TL-011", "tipo": "LED",       "marca": "GENERAC",     "año": "2022", "modelo": "VVT8",         "serie": "1403120",   "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "BM3293" },
+  { "codigo": "TL-012", "tipo": "HALOGENURO", "marca": "WACKER NEUSON","año": "",     "modelo": "",            "serie": "",          "color": "AMARILLO", "motor": "KUBOTA",           "chasis": "" },
+  { "codigo": "TL-015", "tipo": "LED",       "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL-416-4310","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1CX2670" },
+  { "codigo": "TL-016", "tipo": "LED",       "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL412-4478", "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "AA4308" },
+  { "codigo": "TL-023", "tipo": "LED",       "marca": "KUBOTA",      "año": "2023", "modelo": "TLT4WL",       "serie": "TPS01FJ191135","color": "AMARILLO","motor": "KUBOTA Z482",      "chasis": "4KN5788" },
+  { "codigo": "TL-024", "tipo": "LED",       "marca": "KUBOTA",      "año": "2023", "modelo": "TLT4WL",       "serie": "TPS01FJ171137","color": "AMARILLO","motor": "KUBOTA Z482",      "chasis": "4KN5791" },
+  { "codigo": "TL-025", "tipo": "LUMINARIA", "marca": "ATLAS COPCO",  "año": "2014", "modelo": "QLMT",         "serie": "1513D1412A","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1001154" },
+  { "codigo": "TL-026", "tipo": "LUMINARIA", "marca": "WANCO",       "año": "2014", "modelo": "QLMT",         "serie": "1001154",   "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "8W3074" },
+  { "codigo": "TL-027", "tipo": "LED",       "marca": "WANCO",       "año": "2019", "modelo": "QLMT",         "serie": "AKBXL015BCC","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "AQ7292" },
+  { "codigo": "TL-028", "tipo": "LED",       "marca": "WANCO",       "año": "2020", "modelo": "WLTC4",        "serie": "03586",     "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "AL1654" },
+  { "codigo": "TL-030", "tipo": "LED",       "marca": "WACKER NEUSON","año": "2019", "modelo": "LTN6",         "serie": "20078957",  "color": "AMARILLO", "motor": "KOHLER KDW1003GE", "chasis": "9126226" },
+  { "codigo": "TL-035", "tipo": "LUMINARIA", "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL-411-4650","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1CU8598" },
+  { "codigo": "TL-036", "tipo": "HALOGENURO", "marca": "ATLAS COPCO", "año": "2013", "modelo": "QLMT M10",      "serie": "897282850", "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1DG7264" },
+  { "codigo": "TL-037", "tipo": "LED",       "marca": "KUBOTA",      "año": "2023", "modelo": "TLT4WL",       "serie": "TPS01FJ191134","color": "AMARILLO","motor": "KUBOTA Z482",      "chasis": "4KN5782" },
+  { "codigo": "TL-038", "tipo": "LED",       "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL413-6052", "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1CU6492" },
+  { "codigo": "TL-039", "tipo": "LED",       "marca": "KUBOTA",      "año": "2022", "modelo": "TLT4WL",       "serie": "TPS01FJ191133","color": "AMARILLO","motor": "KUBOTA Z428",      "chasis": "4KN5785" },
+  { "codigo": "TL-040", "tipo": "LUMINARIA", "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL-416-6095","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "1CU4981" },
+  { "codigo": "TL-041", "tipo": "LUMINARIA", "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL-411-3253","color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "BG2183" },
+  { "codigo": "TL-042", "tipo": "LED",       "marca": "TEREX",       "año": "2018", "modelo": "RL-4000",      "serie": "RL411-3303", "color": "AMARILLO", "motor": "KUBOTA D1105",     "chasis": "BG1471" },
+  { "codigo": "TL-003", "tipo": "HALOGENURO", "marca": "MAGNUM",     "año": "2018", "modelo": "MLT 3060 M",    "serie": "1101371",   "color": "AMARILLO", "motor": "MITSUBISHI L3E",   "chasis": "150131A6" },
+  { "codigo": "TL-3025", "tipo": "HALOGENURO", "marca": "MAGNUM",    "año": "",     "modelo": "MLT4060 M",    "serie": "1006060",   "color": "BLANCO",   "motor": "MITSUBISHI L3E",   "chasis": "212693-FO" },
+  { "codigo": "TL-3026", "tipo": "HALOGENURO", "marca": "MAGNUM",    "año": "",     "modelo": "MLT4060 M",    "serie": "1006060",   "color": "BLANCO",   "motor": "MITSUBISHI L3E",   "chasis": "" },
+  { "codigo": "TL-3027", "tipo": "HALOGENURO", "marca": "MAGNUM",    "año": "",     "modelo": "",            "serie": "",          "color": "",         "motor": "MITSUBISHI L3E",   "chasis": "" },
+  { "codigo": "TL-3028", "tipo": "HALOGENURO", "marca": "MAGNUM",    "año": "",     "modelo": "",            "serie": "",          "color": "",         "motor": "MITSUBISHI L3E",   "chasis": "" },
+  { "codigo": "TL-3029", "tipo": "HALOGENURO", "marca": "MAGNUM",    "año": "",     "modelo": "",            "serie": "",          "color": "",         "motor": "MITSUBISHI L3E",   "chasis": "" },
+  { "codigo": "CAP-01",  "tipo": "COMPRESORA","marca": "CAMPBELL HAUSFELD", "año": "2022", "modelo": "EXTREME DUTY HS538000AJ", "serie": "HS538000AJ", "color": "AMARILLO", "motor": "SIEMENS TRIFÁSICO", "chasis": "GR2206902" }
 ];
 
 // ============================================================
@@ -125,7 +126,7 @@ app.get('/api/equipos', (req, res) => {
 });
 
 // ============================================================
-// ENDPOINT: BUSCAR RUC (PROXY)
+// ENDPOINT: BUSCAR RUC (CON API KEY)
 // ============================================================
 app.get('/api/ruc/:ruc', async (req, res) => {
   try {
@@ -135,27 +136,26 @@ app.get('/api/ruc/:ruc', async (req, res) => {
       return res.status(400).json({ ok: false, error: 'RUC debe tener 11 dígitos' });
     }
 
-    const response = await fetch('https://buscaruc.com/api/v1/ruc', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ruc: ruc,
-        token: 'eyJ1c2VySWQiOjQ4NDQsInVzZXJUb2tlbklkIjo0ODQzfQ.uoJrUW5jR5gUWAOXluaQgmvF1bHAvZLoTLmMdevg3gFl8glYHmWg9XWOlDbbxZiG3sN2rkVbKmky5C0Z-bSu1wwlQTIEDU8E4KLwTDaTI4f4_OHMXlbULZfMSWVKciQcvP3ue2_KtaWKjx0fe4HBg23WDXBYJEYnYgY_SUm9Qyc'
-      })
+    const response = await fetch(`https://api.apis.net.pe/v1/ruc?numero=${ruc}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer sk_14814.75lcjB3u7tUofo0SCz8FYTyceBAKcxMO'
+      }
     });
 
     const data = await response.json();
-    console.log('RESPUESTA BUSCARUC:', JSON.stringify(data, null, 2));
+    console.log('RESPUESTA API RUC:', JSON.stringify(data));
 
-    // Múltiples posibles estructuras de respuesta
-    const nombre = data?.nombre || data?.data?.nombre || data?.razon_social || data?.data?.razon_social || null;
-    const direccion = data?.direccion || data?.data?.direccion || data?.domicilio_fiscal || data?.data?.domicilio_fiscal || '';
-
-    if (nombre) {
-      return res.json({ ok: true, nombre, direccion });
-    } else {
+    if (data.success === false || !data.nombre) {
       return res.json({ ok: false, error: 'RUC no encontrado o inválido' });
     }
+
+    res.json({
+      ok: true,
+      nombre: data.nombre,
+      direccion: data.direccion || data.domicilio_fiscal || ''
+    });
 
   } catch (err) {
     console.error('Error consultando RUC:', err);
